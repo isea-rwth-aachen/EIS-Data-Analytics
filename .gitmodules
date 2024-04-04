@@ -1,0 +1,4 @@
+[submodule "modules/pyDRTtools"]
+	path = modules/pyDRTtools
+	url = https://github.com/ciuccislab/pyDRTtools.git
+	branch = 78e37a8cdbbf6df6da833e524d2b480cbfc4a633

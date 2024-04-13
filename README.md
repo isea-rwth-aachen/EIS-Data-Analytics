@@ -26,7 +26,7 @@
     ```bash
     cd path_to_this_project
     ```
-4. Follow the instructions of the [Python Read the Docs](https://docs.python.org/3.11/library/venv.html) to create an virtual environment (venv) and activate it. E.g.:
+4. Follow the instructions of the [Python Read the Docs](https://docs.python.org/3.11/library/venv.html) to create an virtual environment (venv) and activate it. E.g.:  
 	**Windows**
     ```bash
     python -m venv .venv\eis_data_analytics
@@ -38,7 +38,7 @@
     .venv/eis_data_analytics/bin/activate
     ```
 
-5. Install all necessary packages with:
+5. Install all necessary packages with:  
     **Windows**
 	```bash
     pip install -r requirements_windows.txt
@@ -86,11 +86,11 @@ Thanks to Spyridon, Xiaohan and Jacob who supported us, <a href="https://orcid.o
 We are using [impedance.py](https://github.com/ECSHackWeek/impedance.py) for LinKK calculations and RC fitting: https://doi.org/10.21105/joss.02349.
 For DRT calculations we use [pyDRTtools](https://github.com/ciuccislab/pyDRTtools): https://doi.org/10.1016/j.electacta.2019.135316.
 
-## Related Publications
+## Related Publications / Citation
 
-The following publications are related to this project. Please cite if you have used this code for your publication.
+A corresponding paper is currently being reviewed. For now please cite the following version:  
 
-- To be submitted
+Release v0.0.9: https://doi.org/10.18154/RWTH-2024-03849
 
 ## License
 

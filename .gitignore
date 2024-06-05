@@ -1,3 +1,4 @@
+*.onnx
 results.csv
 results_all_f.csv
 /.venv/**

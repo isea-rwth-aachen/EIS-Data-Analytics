@@ -19,9 +19,9 @@
 # Getting Started
 1.  Clone the project into your "path_to_this_project". Clone the submodules is important here:
 	```bash
-    git clone --recurse-submodules https://git.rwth-aachen.de/alexander.bloemeke/eis_eval_tool.git path_to_this_projectpreparation
+    git clone --recurse-submodules https://git.rwth-aachen.de/alexander.bloemeke/eis_eval_tool.git path_to_this_project
     ```
-2. Install Python 3.11.8 (https://www.python.org/downloads/)
+2. Install Python 3.11.9 (https://www.python.org/downloads/)
 3. Open an prompt and navigate to the path of this project
     ```bash
     cd path_to_this_project
@@ -29,13 +29,13 @@
 4. Follow the instructions of the [Python Read the Docs](https://docs.python.org/3.11/library/venv.html) to create an virtual environment (venv) and activate it. E.g.:  
 	**Windows**
     ```bash
-    python -m venv .venv\eis_data_analytics
-    .venv\eis_data_analytics\Scripts\activate
+    python -m venv .venv
+    .\.venv\Scripts\activate
     ```
     **Linux / Mac**
     ```bash
-    python -m venv .venv/eis_data_analytics
-    .venv/eis_data_analytics/bin/activate
+    python -m venv .venv
+    . .venv/bin/activate
     ```
 
 5. Install all necessary packages with:  
@@ -90,7 +90,8 @@ For DRT calculations we use [pyDRTtools](https://github.com/ciuccislab/pyDRTtool
 
 A corresponding paper is currently being reviewed. For now please cite the following version:  
 
-Release v0.0.9: https://doi.org/10.18154/RWTH-2024-03849
+Release v0.0.9: https://doi.org/10.18154/RWTH-2024-03849  
+and the Preprint: https://dx.doi.org/10.2139/ssrn.4829135
 
 ## License
 
@@ -98,7 +99,7 @@ This project is licensed according to the file [LICENSE](/LICENSE "LICENSE").
 
 ## Acknowledgement
 
-The authors acknowledge the financial support by the Federal Ministry of Education and Research (BMBF) of Germany in the project OSLiB (project number 03X90330A) within the competence cluster Battery Utilisation Concepts (BattNutzung).
+The authors acknowledge the financial support by the Federal Ministry of Education and Research (BMBF) of Germany in the project OSLiB (project number 03XP0330C) within the competence cluster Battery Utilisation Concepts (BattNutzung).
 
 
 <a href="https://www.bmbf.de/bmbf/en" target="_blank">
@@ -117,7 +118,7 @@ The authors acknowledge the financial support by the Federal Ministry of Educati
 
 We use Git Large File Storage (LFS).
 
-This project is written in [Python 3.11.8](https://www.python.org/) using [Visual Studio Code](https://code.visualstudio.com/) and [Jupyter Notebooks](https://jupyter.org/) in an Python virtual environment on Windows.
+This project is written in [Python 3.11.9](https://www.python.org/) using [Visual Studio Code](https://code.visualstudio.com/) and [Jupyter Notebooks](https://jupyter.org/) in an Python virtual environment on Windows.
 A [requirements.txt](requirements.txt) can be created by:
 
 ```bash
@@ -131,6 +132,9 @@ Consider to ignore the Jupyter Outputs in Git:
 git config filter.strip-notebook-output.clean 'jupyter nbconvert --ClearOutputPreprocessor.enabled=True --to=notebook --stdin --stdout --log-level=ERROR'
 ```
 
+
+
 # FAQ
-- pywin32 fails: https://github.com/microsoft/vscode-jupyter/wiki/Failure-to-start-kernel-due-to-failures-related-to-win32api-module
-- general_fun_v8 can't be found: Make sure you loaded the submodule. See step 1. at [Getting Started](README.md#getting-started)
+- **pywin32 fails**: https://github.com/microsoft/vscode-jupyter/wiki/Failure-to-start-kernel-due-to-failures-related-to-win32api-module
+- **general_fun_v8 can't be found**: Make sure you loaded the submodule. See step 1. at [Getting Started](README.md#getting-started)
+- **I want to run the hyperparameter search in parallel**: It is recommended to use linux/wsl for this. Make sure you install java.

@@ -19,7 +19,7 @@
 # Getting Started
 1.  Clone the project into your "path_to_this_project". Clone the submodules is important here:
 	```bash
-    git clone --recurse-submodules https://git.rwth-aachen.de/alexander.bloemeke/eis_eval_tool.git path_to_this_project
+    git clone --recurse-submodules https://git.rwth-aachen.de/isea/eis_data_analytics.git
     ```
 2. Install Python 3.11.9 (https://www.python.org/downloads/)
 3. Open an prompt and navigate to the path of this project

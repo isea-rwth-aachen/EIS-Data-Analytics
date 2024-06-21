@@ -13,6 +13,11 @@ figures/*
 /data/**
 !/data/**/
 !.gitkeep
+!reference_data.parquet
+!reference_data_abs.json
+!reference_data_abs_temp_soc.json
+!reference_data_abs_phase_temp_soc.json
+!key_lookup_reference_data.parquet
 !example_data.parquet
 !example_data_abs.json
 !example_data_abs_0-01hz.json

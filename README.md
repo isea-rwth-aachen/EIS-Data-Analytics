@@ -11,6 +11,7 @@
 - [Getting Started](README.md#getting-started)
 - [Example Usage](README.md#example-usage)
 - [Overview](README.md#overview)
+- [Verification](README.md#verification)
 - [Colophon](README.md#colophon)
 - [Further Information](README.md#further-information)
 - [FAQ](README.md#faq)
@@ -78,6 +79,22 @@ The main purpose of this tool is to process and analyze large amounts of EIS mea
 Will follow soon:
 - Analysis of variance (ANOVA)
 - Prediction based on machine learning (ML)
+
+
+# Verification
+To verify the flexibility of the tool, the results of the publication "Accelerated state of health estimation of second life lithium-ion batteries via electrochemical impedance spectroscopy tests and machine learning techniques" by Mona Faraji-Niri et al. (https://doi.org/10.1016/j.est.2022.106295) on their dataset by Muhammad Rashid et al. (https://doi.org/10.1016/j.dib.2023.109157) is verified. Different to their paper we use the SVR to estimate the SOH. We used three different input combinations. For each 30.000 hyperparameter combinations were tested. Below for each input combination the best result.
+
+#### SOH prediction based on Absolute Values of the Impedance
+<img src="misc/reference_data_output_soh_input_abs_result.svg" alt="SOH prediction based on Absolute Values of the Impedance Result" height="300"/>
+<img src="misc/reference_data_output_soh_input_abs_parameter.svg" alt="SOH prediction based on Absolute Values of the Impedance Hyperparameter" height="300"/>
+
+#### SOH prediction based on Absolute Values of the Impedance + Temperature + SOC
+<img src="misc/reference_data_output_soh_input_abs_temp_soc_result.svg" alt="SOH prediction based on Absolute Values of the Impedance Result" height="300"/>
+<img src="misc/reference_data_output_soh_input_abs_temp_soc_parameter.svg" alt="SOH prediction based on Absolute Values of the Impedance Hyperparameter" height="300"/>
+
+#### SOH prediction based on Absolute and Phase Values of the Impedance + Temperature + SOC
+<img src="misc/reference_data_output_soh_input_abs_phase_temp_soc_result.svg" alt="SOH prediction based on Absolute Values of the Impedance Result" height="300"/>
+<img src="misc/reference_data_output_soh_input_abs_phase_temp_soc_parameter.svg" alt="SOH prediction based on Absolute Values of the Impedance Hyperparameter" height="300"/>
 
 # Colophon
 

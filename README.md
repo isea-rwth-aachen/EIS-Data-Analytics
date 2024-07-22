@@ -6,15 +6,20 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-*EIS Data Analytics* is a collection of code to analyse which fitting approach is suitable for your electrochemical impedance spectroscopy (EIS) data.
+*EIS Data Analytics* is a collection of code to analyse which fitting approach is suitable for your electrochemical impedance spectroscopy (EIS) data.  
+<a href="https://doi.org/10.1016/j.jpowsour.2024.235049" target="_blank">
+<img src="misc/graphical_abstract.svg" alt="Graphical Abstract [1]" height="250"/> [1]
+</a>  
 
 - [Getting Started](README.md#getting-started)
 - [Example Usage](README.md#example-usage)
 - [Overview](README.md#overview)
+- [Temperature Estimation](README.md#temperature-estimation)
 - [Verification](README.md#verification)
 - [Colophon](README.md#colophon)
 - [Further Information](README.md#further-information)
 - [FAQ](README.md#faq)
+- [Sources](README.md#sources)
 
 
 # Getting Started
@@ -77,9 +82,23 @@ The main purpose of this tool is to process and analyze large amounts of EIS mea
 - Support Vector Regression (SVR)
 
 Will follow soon:
-- Analysis of variance (ANOVA)
+- Phase estimation based on absolute values
 - Prediction based on machine learning (ML)
 
+# Temperature Estimation
+A more detailed explanation can be found in the corresponding publication. [1]  
+The cells “LiFun_575166-01_XXX.csv” in the example_input_data folder are used to develop an example SVR temperature estimation model. The data includes the temperatures -15, -5, 5, 15, 25, 35, 45 and 55 °C. An EIS measurement is carried out at each temperature and the SOC values 0, 1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 99 and 100 %.  
+<a href="https://doi.org/10.1016/j.jpowsour.2024.235049" target="_blank">
+<img src="misc/example_data_bode.svg" alt="Example Data Bode [1]" height="450"/> [1]
+</a>  
+The following results are obtained for three individual frequencies.  
+<a href="https://doi.org/10.1016/j.jpowsour.2024.235049" target="_blank">
+<img src="misc/example_data_svr_single_f_temperature.svg" alt="EIS Temperature Estimation SVR, Input: one frequency [1]" height="400"/> [1]
+</a>    
+With the entire spectrum as input, the following errors can be obtained.  
+<a href="https://doi.org/10.1016/j.jpowsour.2024.235049" target="_blank">
+<img src="misc/example_data_svr_all_fs_temperature.svg" alt="EIS Temperature Estimation SVR, Input: all frequencies [1]" height="200"/> [1]
+</a>  
 
 # Verification
 To verify the flexibility of the tool, the results of the publication "Accelerated state of health estimation of second life lithium-ion batteries via electrochemical impedance spectroscopy tests and machine learning techniques" by Mona Faraji-Niri et al. (https://doi.org/10.1016/j.est.2022.106295) on their dataset by Muhammad Rashid et al. (https://doi.org/10.1016/j.dib.2023.109157) is verified. Different to their paper we use the SVR to estimate the SOH. We used three different input combinations. For each 30.000 hyperparameter combinations were tested. Below for each input combination the best result.
@@ -105,10 +124,10 @@ For DRT calculations we use [pyDRTtools](https://github.com/ciuccislab/pyDRTtool
 
 ## Related Publications / Citation
 
-A corresponding paper is currently being reviewed. For now please cite the following version:  
+Please cite our paper: https://doi.org/10.1016/j.jpowsour.2024.235049  
 
-Release v0.0.9: https://doi.org/10.18154/RWTH-2024-03849  
-and the Preprint: https://dx.doi.org/10.2139/ssrn.4829135
+Archived versions of this git:  
+Release v0.0.9: https://doi.org/10.18154/RWTH-2024-03849
 
 ## License
 
@@ -155,3 +174,7 @@ git config filter.strip-notebook-output.clean 'jupyter nbconvert --ClearOutputPr
 - **pywin32 fails**: https://github.com/microsoft/vscode-jupyter/wiki/Failure-to-start-kernel-due-to-failures-related-to-win32api-module
 - **general_fun_v8 can't be found**: Make sure you loaded the submodule. See step 1. at [Getting Started](README.md#getting-started)
 - **I want to run the hyperparameter search in parallel**: It is recommended to use linux/wsl for this. Make sure you install java.
+
+
+# Sources
+[1] https://doi.org/10.1016/j.jpowsour.2024.235049

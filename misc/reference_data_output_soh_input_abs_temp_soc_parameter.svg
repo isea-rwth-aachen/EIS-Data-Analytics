@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   width="323.5752pt"
-   height="326.63962pt"
-   viewBox="0 0 323.5752 326.63963"
+   width="323.57501pt"
+   height="326.64001pt"
+   viewBox="0 0 323.57502 326.64003"
    version="1.1"
    id="svg1027"
-   sodipodi:docname="reference_data__abs_temp_soc_ExpID_548887373700528558_RunID_6f6b4ffaf25d41a39945e1a9c00e2db3.svg"
-   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   sodipodi:docname="reference_data_output_soh_input_abs_temp_soc_parameter.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -23,13 +23,13 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="pt"
      showgrid="false"
-     inkscape:zoom="2.2643924"
-     inkscape:cx="204.69067"
-     inkscape:cy="221.69302"
-     inkscape:window-width="3840"
-     inkscape:window-height="2078"
-     inkscape:window-x="-11"
-     inkscape:window-y="-11"
+     inkscape:zoom="1.1321962"
+     inkscape:cx="97.156306"
+     inkscape:cy="303.39265"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg1027" />
   <defs
@@ -669,6 +669,13 @@
          id="path290" />
     </clipPath>
   </defs>
+  <rect
+     style="fill:#ffffff;stroke-width:6.04061"
+     id="rect1"
+     width="323.57501"
+     height="326.64001"
+     x="1.4210855e-14"
+     y="-3.5527137e-15" />
   <g
      clip-path="url(#clip-0)"
      id="g297"

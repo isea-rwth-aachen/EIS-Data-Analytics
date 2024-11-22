@@ -13,66 +13,71 @@ from scipy import stats
 
 import rwth_colors
 
-cm = 1/2.54  # centimeters in inches
+cm = 1 / 2.54  # centimeters in inches
 
 # column-name -> metric unit
-metric_dic = {"AH_throughput": "Ah", "Temperature": "$^\circ$C", "Voltage": "V",
-              "Capacity": "Ah", "Duration": "days", "SOC": "$\%$", "SOH": "$\%$",
-              "Current": "A", "Wh_throughput": "Wh", "Capacity_current": "A"}
+metric_dic = {
+    "AH_throughput": "Ah",
+    "Temperature": "$^\circ$C",
+    "Voltage": "V",
+    "Capacity": "Ah",
+    "Duration": "days",
+    "SOC": "$\%$",
+    "SOH": "$\%$",
+    "Current": "A",
+    "Wh_throughput": "Wh",
+    "Capacity_current": "A",
+}
 
 # if no color is selected, use the default colors of the cycler, which are:
 rwth_colors_cycler_color = [
-    rwth_colors.colors[('blue', 100)],
-    rwth_colors.colors[('black', 100)],
-    rwth_colors.colors[('magenta', 100)],
-    rwth_colors.colors[('yellow', 100)],
-    rwth_colors.colors[('green', 100)],
-    rwth_colors.colors[('bordeaux', 100)],
-    rwth_colors.colors[('orange', 100)],
-    rwth_colors.colors[('turqoise', 100)],
-    rwth_colors.colors[('darkred', 100)],
-    rwth_colors.colors[('lime', 100)],
-    rwth_colors.colors[('petrol', 100)],
-    rwth_colors.colors[('lavender', 100)],
-    rwth_colors.colors[('red', 100)],
-
-    rwth_colors.colors[('blue', 50)],
-    rwth_colors.colors[('black', 50)],
-    rwth_colors.colors[('magenta', 50)],
-    rwth_colors.colors[('yellow', 50)],
-    rwth_colors.colors[('green', 50)],
-    rwth_colors.colors[('bordeaux', 50)],
-    rwth_colors.colors[('orange', 50)],
-    rwth_colors.colors[('turqoise', 50)],
-    rwth_colors.colors[('darkred', 50)],
-    rwth_colors.colors[('lime', 50)],
-    rwth_colors.colors[('petrol', 50)],
-    rwth_colors.colors[('lavender', 50)],
-    rwth_colors.colors[('red', 50)]
+    rwth_colors.colors[("blue", 100)],
+    rwth_colors.colors[("black", 100)],
+    rwth_colors.colors[("magenta", 100)],
+    rwth_colors.colors[("yellow", 100)],
+    rwth_colors.colors[("green", 100)],
+    rwth_colors.colors[("bordeaux", 100)],
+    rwth_colors.colors[("orange", 100)],
+    rwth_colors.colors[("turqoise", 100)],
+    rwth_colors.colors[("darkred", 100)],
+    rwth_colors.colors[("lime", 100)],
+    rwth_colors.colors[("petrol", 100)],
+    rwth_colors.colors[("lavender", 100)],
+    rwth_colors.colors[("red", 100)],
+    rwth_colors.colors[("blue", 50)],
+    rwth_colors.colors[("black", 50)],
+    rwth_colors.colors[("magenta", 50)],
+    rwth_colors.colors[("yellow", 50)],
+    rwth_colors.colors[("green", 50)],
+    rwth_colors.colors[("bordeaux", 50)],
+    rwth_colors.colors[("orange", 50)],
+    rwth_colors.colors[("turqoise", 50)],
+    rwth_colors.colors[("darkred", 50)],
+    rwth_colors.colors[("lime", 50)],
+    rwth_colors.colors[("petrol", 50)],
+    rwth_colors.colors[("lavender", 50)],
+    rwth_colors.colors[("red", 50)],
 ]
 
-rwth_colors_cycler_linestyle = [
-    '-',
-    '--',
-    '-.'
-]
+rwth_colors_cycler_linestyle = ["-", "--", "-."]
 
 
-cc = (cycler(linestyle=rwth_colors_cycler_linestyle)
-      * cycler(color=rwth_colors_cycler_color))
+cc = cycler(linestyle=rwth_colors_cycler_linestyle) * cycler(
+    color=rwth_colors_cycler_color
+)
 
-sns.set(style='white')
+sns.set(style="white")
 
-mpl.rcParams['axes.prop_cycle'] = cc
-mpl.rcParams['axes.facecolor'] = 'none'
-mpl.rcParams['axes.labelsize'] = 8
-mpl.rcParams['axes.titlesize'] = 8
-mpl.rcParams['figure.facecolor'] = 'none'
-mpl.rcParams['font.size'] = 8
-mpl.rcParams['image.cmap'] = 'turbo'
-mpl.rcParams['xtick.labelsize'] = 8
-mpl.rcParams['ytick.labelsize'] = 8
-mpl.rcParams['legend.fontsize'] = 8
+mpl.rcParams["axes.prop_cycle"] = cc
+mpl.rcParams["axes.facecolor"] = "none"
+mpl.rcParams["axes.labelsize"] = 8
+mpl.rcParams["axes.titlesize"] = 8
+mpl.rcParams["figure.facecolor"] = "none"
+mpl.rcParams["font.size"] = 8
+mpl.rcParams["image.cmap"] = "turbo"
+mpl.rcParams["xtick.labelsize"] = 8
+mpl.rcParams["ytick.labelsize"] = 8
+mpl.rcParams["legend.fontsize"] = 8
 
 
 def get_single_cellnames(cell_list, str_cutoff=-11):
@@ -91,7 +96,18 @@ def get_single_cellnames(cell_list, str_cutoff=-11):
     return single_cellnames
 
 
-def setup_scatter(dataset, mse, title=True, legend=False, fig=None, ax=None, ax_xlabel=True, ax_ylabel=True, subplots_adjust=True, add_trendline=True):
+def setup_scatter(
+    dataset,
+    mse,
+    title=True,
+    legend=False,
+    fig=None,
+    ax=None,
+    ax_xlabel=True,
+    ax_ylabel=True,
+    subplots_adjust=True,
+    add_trendline=True,
+):
     """
     Setup the scatter plot for the given dataset.
 
@@ -113,7 +129,7 @@ def setup_scatter(dataset, mse, title=True, legend=False, fig=None, ax=None, ax_
     if fig is None or ax is None:
         fig, ax = plt.subplots(1, 1)
     ax.grid(True)
-    ax.set_aspect('equal', 'box')
+    ax.set_aspect("equal", "box")
 
     label = dataset["label"]
     label_latex = label
@@ -127,18 +143,16 @@ def setup_scatter(dataset, mse, title=True, legend=False, fig=None, ax=None, ax_
     if legend:
         ax.legend()
 
-
     if add_trendline:
         y_train = dataset["train"][1]
         # values for line plot in range of test data
         x = np.linspace(y_train.min(), y_train.max(), num=4)
 
         # plot ideal line
-        ax.plot(x, x, label="ideal", color=rwth_colors.colors[('green', 100)])
+        ax.plot(x, x, label="ideal", color=rwth_colors.colors[("green", 100)])
 
     if title:
-        title = str("Prediction of " + label_latex +
-                    " (mse=" + str(mse)[:4] + ")")
+        title = str("Prediction of " + label_latex + " (mse=" + str(mse)[:4] + ")")
         ax.set_title(title)
 
     if subplots_adjust:
@@ -179,7 +193,22 @@ def get_cell_label(dic, cell_name):
     return cell_label
 
 
-def cell_scatter(dataset, Y_predicted, is_test=False, is_validation=False, cell_names=[], dic=None, title=True, legend=False, fig=None, ax=None, ax_xlabel=True, ax_ylabel=True, subplots_adjust=True, add_trendline=True):
+def cell_scatter(
+    dataset,
+    Y_predicted,
+    is_test=False,
+    is_validation=False,
+    cell_names=[],
+    dic=None,
+    title=True,
+    legend=False,
+    fig=None,
+    ax=None,
+    ax_xlabel=True,
+    ax_ylabel=True,
+    subplots_adjust=True,
+    add_trendline=True,
+):
     """
     Plot the predicted values for each cell in the dataset.
 
@@ -205,20 +234,16 @@ def cell_scatter(dataset, Y_predicted, is_test=False, is_validation=False, cell_
     # get label/target string and dataframe of test data
     if is_test:
         df_plot = dataset["df_test"]
-        scatter_color = mpl.colors.to_rgba(
-            rwth_colors.colors[('lavender', 100)], 0.5)
-        scatter_marker = '2'
+        scatter_color = mpl.colors.to_rgba(rwth_colors.colors[("lavender", 100)], 0.5)
+        scatter_marker = "2"
     elif is_validation:
         df_plot = dataset["df_validation"]
-        scatter_color = mpl.colors.to_rgba(
-            rwth_colors.colors[('orange', 100)], 0.5)
-        scatter_marker = '1'
+        scatter_color = mpl.colors.to_rgba(rwth_colors.colors[("orange", 100)], 0.5)
+        scatter_marker = "1"
     else:
         df_plot = dataset["df_train"]
-        scatter_color = mpl.colors.to_rgba(
-            rwth_colors.colors[('blue', 100)], 0.5)
-        scatter_marker = '.'
-    
+        scatter_color = mpl.colors.to_rgba(rwth_colors.colors[("blue", 100)], 0.5)
+        scatter_marker = "."
 
     label = dataset["label"]
 
@@ -226,9 +251,18 @@ def cell_scatter(dataset, Y_predicted, is_test=False, is_validation=False, cell_
     Y_test = df_plot[label].to_numpy()
     mse = ((Y_predicted - Y_test) ** 2).mean()
 
-    fig, ax = setup_scatter(dataset, mse, title=title, legend=legend, fig=fig, ax=ax,
-                            ax_xlabel=ax_xlabel, ax_ylabel=ax_ylabel, 
-                            subplots_adjust=subplots_adjust, add_trendline=add_trendline)
+    fig, ax = setup_scatter(
+        dataset,
+        mse,
+        title=title,
+        legend=legend,
+        fig=fig,
+        ax=ax,
+        ax_xlabel=ax_xlabel,
+        ax_ylabel=ax_ylabel,
+        subplots_adjust=subplots_adjust,
+        add_trendline=add_trendline,
+    )
 
     for i, cell_name in enumerate(cell_names):
         # select subset of df with all cells having cell_name in their cell_ID
@@ -245,8 +279,15 @@ def cell_scatter(dataset, Y_predicted, is_test=False, is_validation=False, cell_
         # get label for the legend
         scatter_label = get_cell_label(dic, cell_name)
 
-        ax.plot(y_test_cell_name, Y_predicted_cell_name, linestyle='', label=scatter_label,
-                marker=scatter_marker, color=scatter_color, mfc=scatter_color)
+        ax.plot(
+            y_test_cell_name,
+            Y_predicted_cell_name,
+            linestyle="",
+            label=scatter_label,
+            marker=scatter_marker,
+            color=scatter_color,
+            mfc=scatter_color,
+        )
 
     if legend:
         ax.legend()
@@ -254,7 +295,7 @@ def cell_scatter(dataset, Y_predicted, is_test=False, is_validation=False, cell_
     return fig, ax
 
 
-def reduce_df(df, feature, nr_intervals, interval_type='lin'):
+def reduce_df(df, feature, nr_intervals, interval_type="lin"):
     """
     Reduce the dataframe to a smaller dataframe containing only the data for the given feature.
 
@@ -267,34 +308,51 @@ def reduce_df(df, feature, nr_intervals, interval_type='lin'):
     Returns:
         DataFrame: The reduced dataframe.
     """
-    if interval_type not in ['lin', 'log']:
-        interval_type = 'lin'
+    if interval_type not in ["lin", "log"]:
+        interval_type = "lin"
 
-    if interval_type == 'lin':
+    if interval_type == "lin":
         feature_steps = np.linspace(
-            np.min(df[feature]), np.max(df[feature]), nr_intervals + 1)
+            np.min(df[feature]), np.max(df[feature]), nr_intervals + 1
+        )
     else:
-        feature_steps = np.logspace(np.log10(np.min(df[feature])), np.log10(
-            np.max(df[feature])), nr_intervals + 1)
+        feature_steps = np.logspace(
+            np.log10(np.min(df[feature])),
+            np.log10(np.max(df[feature])),
+            nr_intervals + 1,
+        )
 
     df_new = pd.DataFrame()
     for i, step in enumerate(feature_steps[:-1]):
         if i == 0:
             mask = (df[feature] >= feature_steps[i]) & (
-                df[feature] <= feature_steps[i + 1])
+                df[feature] <= feature_steps[i + 1]
+            )
             possible = df.loc[mask]
         else:
             mask = (df[feature] > feature_steps[i]) & (
-                df[feature] <= feature_steps[i + 1])
+                df[feature] <= feature_steps[i + 1]
+            )
             possible = df.loc[mask]
         if len(possible) > 0:
             row = possible.iloc[[int(np.floor(len(possible) / 2))]]
             df_new = pd.concat([df_new, row])
-    df_new = df_new[~df_new.duplicated(keep='first')]
+    df_new = df_new[~df_new.duplicated(keep="first")]
     return df_new
 
 
-def setup_Bode(title, legend=False, fig=None, ax1=None, ax2=None, ax1_xlabel=False, ax1_ylabel=True, ax2_xlabel=True, ax2_ylabel=True, subplots_adjust=True):
+def setup_Bode(
+    title,
+    legend=False,
+    fig=None,
+    ax1=None,
+    ax2=None,
+    ax1_xlabel=False,
+    ax1_ylabel=True,
+    ax2_xlabel=True,
+    ax2_ylabel=True,
+    subplots_adjust=True,
+):
     """
     Set up the Bode plot.
 
@@ -316,7 +374,9 @@ def setup_Bode(title, legend=False, fig=None, ax1=None, ax2=None, ax1_xlabel=Fal
         ax2: The second axis.
     """
     if fig is None or ax1 is None or ax2 is None:
-        fig, (ax1, ax2) = plt.subplots(nrows=2, ncols=1, sharex=True, figsize=(20*cm, 9*cm))
+        fig, (ax1, ax2) = plt.subplots(
+            nrows=2, ncols=1, sharex=True, figsize=(20 * cm, 9 * cm)
+        )
         if ax2_xlabel:
             ax2.set_xlabel(r"Frequency in Hz")
     else:
@@ -324,20 +384,20 @@ def setup_Bode(title, legend=False, fig=None, ax1=None, ax2=None, ax1_xlabel=Fal
             ax1.set_xlabel(r"Frequency in Hz")
         if ax2_xlabel:
             ax2.set_xlabel(r"Frequency in Hz")
-    ax2.grid(True, which='major', axis='both', alpha=1)
-    ax2.grid(True, which='minor', axis='x', alpha=0.2)
-    ax2.set_xscale('log')
+    ax2.grid(True, which="major", axis="both", alpha=1)
+    ax2.grid(True, which="minor", axis="x", alpha=0.2)
+    ax2.set_xscale("log")
     if ax2_ylabel:
-        if mpl.rcParams['text.usetex']:
+        if mpl.rcParams["text.usetex"]:
             ax2.set_ylabel(r"\ \angle $\underline{Z}$ in $^\circ$")
         else:
             ax2.set_ylabel(r"Phase of Z in °")
 
-    ax1.grid(True, which='major', axis='both', alpha=1)
-    ax1.grid(True, which='minor', axis='x', alpha=0.2)
-    ax1.set_xscale('log')
+    ax1.grid(True, which="major", axis="both", alpha=1)
+    ax1.grid(True, which="minor", axis="x", alpha=0.2)
+    ax1.set_xscale("log")
     if ax1_ylabel:
-        if mpl.rcParams['text.usetex']:
+        if mpl.rcParams["text.usetex"]:
             ax1.set_ylabel(r"$|\underline{Z}|$ in m$\Omega$")
         else:
             ax1.set_ylabel(r"|Z| in mΩ")
@@ -352,7 +412,15 @@ def setup_Bode(title, legend=False, fig=None, ax1=None, ax2=None, ax1_xlabel=Fal
     return fig, (ax1, ax2)
 
 
-def setup_Nyq(title=None, legend=False, fig=None, ax=None, ax_xlabel=True, ax_ylabel=True, subplots_adjust=True):
+def setup_Nyq(
+    title=None,
+    legend=False,
+    fig=None,
+    ax=None,
+    ax_xlabel=True,
+    ax_ylabel=True,
+    subplots_adjust=True,
+):
     """
     Set up the Nyquist plot.
 
@@ -371,16 +439,16 @@ def setup_Nyq(title=None, legend=False, fig=None, ax=None, ax_xlabel=True, ax_yl
     """
 
     if fig is None or ax is None:
-        fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(20*cm, 9*cm))
+        fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(20 * cm, 9 * cm))
     ax.grid(True)
-    ax.set_aspect('equal', 'box')
+    ax.set_aspect("equal", "box")
     if ax_xlabel:
-        if mpl.rcParams['text.usetex']:
+        if mpl.rcParams["text.usetex"]:
             ax.set_xlabel(r"$\Re(\underline{Z})$ in m$\Omega$")
         else:
             ax.set_xlabel(r"Re(Z) in mΩ")
     if ax_ylabel:
-        if mpl.rcParams['text.usetex']:
+        if mpl.rcParams["text.usetex"]:
             ax.set_ylabel(r"$\Im(\underline{Z})$ in m$\Omega$")
         else:
             ax.set_ylabel(r"Im(Z) in mΩ")
@@ -431,7 +499,26 @@ def setup_colormap(min_value, max_value, feature, fig, axes, location="right"):
     return cmap
 
 
-def plot_bode_feature(df, key_lookup_df, feature, title=None, reduce=False, nr_intervals=10, interval_type='lin', highlight_freqs=[], highlight_df_columns=[], fig=None, ax1=None, ax2=None, ax1_xlabel=True, ax1_ylabel=True, ax2_xlabel=True, ax2_ylabel=True, subplots_adjust=True, cmap=None):
+def plot_bode_feature(
+    df,
+    key_lookup_df,
+    feature,
+    title=None,
+    reduce=False,
+    nr_intervals=10,
+    interval_type="lin",
+    highlight_freqs=[],
+    highlight_df_columns=[],
+    fig=None,
+    ax1=None,
+    ax2=None,
+    ax1_xlabel=True,
+    ax1_ylabel=True,
+    ax2_xlabel=True,
+    ax2_ylabel=True,
+    subplots_adjust=True,
+    cmap=None,
+):
     """
     Plot the Bode diagram for a given feature.
 
@@ -460,8 +547,7 @@ def plot_bode_feature(df, key_lookup_df, feature, title=None, reduce=False, nr_i
         (ax1, ax2): The modified axes.
         cmap: The modified colormap.
     """
-    phase_exists = (
-        len(list(filter(lambda x: 'EIS_Z_phase' in x, df.columns))) > 0)
+    phase_exists = len(list(filter(lambda x: "EIS_Z_phase" in x, df.columns))) > 0
 
     if reduce:
         df = reduce_df(df, feature, nr_intervals, interval_type=interval_type)
@@ -470,12 +556,22 @@ def plot_bode_feature(df, key_lookup_df, feature, title=None, reduce=False, nr_i
     if fig is None or ax1 is None or ax2 is None:
         fig, (ax1, ax2) = setup_Bode(title)
     else:
-        fig, (ax1, ax2) = setup_Bode(title, fig=fig, ax1=ax1, ax2=ax2, ax1_xlabel=ax1_xlabel,
-                                     ax1_ylabel=ax1_ylabel, ax2_xlabel=ax2_xlabel, ax2_ylabel=ax2_ylabel, subplots_adjust=subplots_adjust)
+        fig, (ax1, ax2) = setup_Bode(
+            title,
+            fig=fig,
+            ax1=ax1,
+            ax2=ax2,
+            ax1_xlabel=ax1_xlabel,
+            ax1_ylabel=ax1_ylabel,
+            ax2_xlabel=ax2_xlabel,
+            ax2_ylabel=ax2_ylabel,
+            subplots_adjust=subplots_adjust,
+        )
 
     if cmap is None:
         cmap = setup_colormap(
-            df[feature].min(), df[feature].max(), feature, fig, (ax1, ax2))
+            df[feature].min(), df[feature].max(), feature, fig, (ax1, ax2)
+        )
 
     # get frequencies and keys of dataframe EIS columns
     frequencies = key_lookup_df["frequency"].to_numpy()
@@ -504,20 +600,24 @@ def plot_bode_feature(df, key_lookup_df, feature, title=None, reduce=False, nr_i
 
     if highlight_freqs or highlight_df_columns:
         line_segments_abs = mpl.collections.LineCollection(
-            segs_abs, colors=colors, linestyle='solid', alpha=0.1)
+            segs_abs, colors=colors, linestyle="solid", alpha=0.1
+        )
         if phase_exists:
             line_segments_phase = mpl.collections.LineCollection(
-                segs_phase, colors=colors, linestyle='solid', alpha=0.1)
+                segs_phase, colors=colors, linestyle="solid", alpha=0.1
+            )
 
         ax1.add_collection(line_segments_abs)
         if phase_exists:
             ax2.add_collection(line_segments_phase)
     else:
         line_segments_abs = mpl.collections.LineCollection(
-            segs_abs, colors=colors, linestyle='solid', alpha=1)
+            segs_abs, colors=colors, linestyle="solid", alpha=1
+        )
         if phase_exists:
             line_segments_phase = mpl.collections.LineCollection(
-                segs_phase, colors=colors, linestyle='solid', alpha=1)
+                segs_phase, colors=colors, linestyle="solid", alpha=1
+            )
 
         ax1.add_collection(line_segments_abs)
         if phase_exists:
@@ -525,34 +625,36 @@ def plot_bode_feature(df, key_lookup_df, feature, title=None, reduce=False, nr_i
 
     if highlight_freqs:
         abs_high_key, phase_high_key = get_highlight_keys_bode(
-            key_lookup_df, highlight_freqs)
+            key_lookup_df, highlight_freqs
+        )
 
-        abs_high_values = df[abs_high_key].to_numpy(dtype='float64') * 1000
-        phase_high_values = df[phase_high_key].to_numpy(
-            dtype='float64') / np.pi * 180
-        feature_values = df[feature].to_numpy(dtype='float64')
+        abs_high_values = df[abs_high_key].to_numpy(dtype="float64") * 1000
+        phase_high_values = df[phase_high_key].to_numpy(dtype="float64") / np.pi * 180
+        feature_values = df[feature].to_numpy(dtype="float64")
 
         colors = cmap.to_rgba(feature_values)
         colors = np.repeat(colors, len(abs_high_key), axis=0)
 
         highlight_freqs = np.tile(highlight_freqs, (len(df[abs_high_key]), 1))
 
-        ax1.scatter(highlight_freqs, abs_high_values,
-                    s=25, marker='x', c=colors, alpha=1)
-        ax2.scatter(highlight_freqs, phase_high_values,
-                    s=25, marker='x', c=colors, alpha=1)
+        ax1.scatter(
+            highlight_freqs, abs_high_values, s=25, marker="x", c=colors, alpha=1
+        )
+        ax2.scatter(
+            highlight_freqs, phase_high_values, s=25, marker="x", c=colors, alpha=1
+        )
 
     if highlight_df_columns:
-        feature_values = df[feature].to_numpy(dtype='float64')
+        feature_values = df[feature].to_numpy(dtype="float64")
         colors = cmap.to_rgba(feature_values)
 
         for x, y in highlight_df_columns:
-            if 'Phase' in y:
-                ax2.scatter(df[x], df[y] / np.pi * 180, s=25,
-                            marker='x', c=colors, alpha=1)
-            elif 'Abs' in y:
-                ax1.scatter(df[x], df[y] * 1000, s=25,
-                            marker='x', c=colors, alpha=1)
+            if "Phase" in y:
+                ax2.scatter(
+                    df[x], df[y] / np.pi * 180, s=25, marker="x", c=colors, alpha=1
+                )
+            elif "Abs" in y:
+                ax1.scatter(df[x], df[y] * 1000, s=25, marker="x", c=colors, alpha=1)
 
     delta_y1 = np.median(np.diff(ax1.get_yticks()))
     if phase_exists:
@@ -584,10 +686,8 @@ def get_highlight_keys_nyquist(key_lookup_df, highlight_freqs):
     Returns:
         The keys that match those frequencies.
     """
-    lookup_high = key_lookup_df.loc[
-        key_lookup_df["frequency"].isin(highlight_freqs)]
-    return (lookup_high["EIS_Z_Re"].to_list(),
-            lookup_high["EIS_Z_Im"].to_list())
+    lookup_high = key_lookup_df.loc[key_lookup_df["frequency"].isin(highlight_freqs)]
+    return (lookup_high["EIS_Z_Re"].to_list(), lookup_high["EIS_Z_Im"].to_list())
 
 
 def get_highlight_keys_bode(key_lookup_df, highlight_freqs):
@@ -601,13 +701,28 @@ def get_highlight_keys_bode(key_lookup_df, highlight_freqs):
     Returns:
         The keys that match those frequencies.
     """
-    lookup_high = key_lookup_df.loc[
-        key_lookup_df["frequency"].isin(highlight_freqs)]
-    return (lookup_high["EIS_Z_abs"].to_list(),
-            lookup_high["EIS_Z_phase"].to_list())
+    lookup_high = key_lookup_df.loc[key_lookup_df["frequency"].isin(highlight_freqs)]
+    return (lookup_high["EIS_Z_abs"].to_list(), lookup_high["EIS_Z_phase"].to_list())
 
 
-def plot_nyquist_feature(df, key_lookup_df, feature, title=None, reduce=False, interval_type='lin', nr_intervals=10, highlight_freqs=[], highlight_df_columns=[], fig=None, ax=None, ax_xlabel=True, ax_ylabel=True, subplots_adjust=True, legend=False, cmap=None):
+def plot_nyquist_feature(
+    df,
+    key_lookup_df,
+    feature,
+    title=None,
+    reduce=False,
+    interval_type="lin",
+    nr_intervals=10,
+    highlight_freqs=[],
+    highlight_df_columns=[],
+    fig=None,
+    ax=None,
+    ax_xlabel=True,
+    ax_ylabel=True,
+    subplots_adjust=True,
+    legend=False,
+    cmap=None,
+):
     """
     Plot the Nyquist diagram for a given feature.
 
@@ -640,12 +755,18 @@ def plot_nyquist_feature(df, key_lookup_df, feature, title=None, reduce=False, i
     if fig is None or ax is None:
         fig, ax = setup_Nyq(title, legend)
     else:
-        fig, ax = setup_Nyq(title, legend, fig=fig, ax=ax, ax_xlabel=ax_xlabel,
-                            ax_ylabel=ax_ylabel, subplots_adjust=subplots_adjust)
+        fig, ax = setup_Nyq(
+            title,
+            legend,
+            fig=fig,
+            ax=ax,
+            ax_xlabel=ax_xlabel,
+            ax_ylabel=ax_ylabel,
+            subplots_adjust=subplots_adjust,
+        )
 
     if cmap is None:
-        cmap = setup_colormap(
-            df[feature].min(), df[feature].max(), feature, fig, ax)
+        cmap = setup_colormap(df[feature].min(), df[feature].max(), feature, fig, ax)
     colors = cmap.to_rgba(df[feature].to_numpy("float64"))
 
     # get keys of dataframe eis columns
@@ -658,34 +779,35 @@ def plot_nyquist_feature(df, key_lookup_df, feature, title=None, reduce=False, i
 
     if highlight_freqs or highlight_df_columns:
         line_segments_nyq = mpl.collections.LineCollection(
-            segs_nyq, colors=colors, linestyle='solid', alpha=0.1)
+            segs_nyq, colors=colors, linestyle="solid", alpha=0.1
+        )
         ax.add_collection(line_segments_nyq)
     else:
         line_segments_nyq = mpl.collections.LineCollection(
-            segs_nyq, colors=colors, linestyle='solid', alpha=1)
+            segs_nyq, colors=colors, linestyle="solid", alpha=1
+        )
         ax.add_collection(line_segments_nyq)
 
     if highlight_freqs:
         Re_high_key, Im_high_key = get_highlight_keys_nyquist(
-            key_lookup_df, highlight_freqs)
+            key_lookup_df, highlight_freqs
+        )
 
-        Re_high_values = df[Re_high_key].to_numpy(dtype='float64') * 1000
-        Im_high_values = df[Im_high_key].to_numpy(dtype='float64') * 1000
-        feature_values = df[feature].to_numpy(dtype='float64')
+        Re_high_values = df[Re_high_key].to_numpy(dtype="float64") * 1000
+        Im_high_values = df[Im_high_key].to_numpy(dtype="float64") * 1000
+        feature_values = df[feature].to_numpy(dtype="float64")
 
         colors = cmap.to_rgba(feature_values)
         colors = np.repeat(colors, len(Re_high_key), axis=0)
 
-        ax.scatter(Re_high_values, Im_high_values,
-                   s=25, marker='x', c=colors, alpha=1)
+        ax.scatter(Re_high_values, Im_high_values, s=25, marker="x", c=colors, alpha=1)
 
     if highlight_df_columns:
-        feature_values = df[feature].to_numpy(dtype='float64')
+        feature_values = df[feature].to_numpy(dtype="float64")
         colors = cmap.to_rgba(feature_values)
 
         for x, y in highlight_df_columns:
-            ax.scatter(df[x] * 1000, df[y] * 1000, s=25,
-                       marker='x', c=colors, alpha=1)
+            ax.scatter(df[x] * 1000, df[y] * 1000, s=25, marker="x", c=colors, alpha=1)
 
     # first based on the data
     x_min = segs_nyq[:, :, 0].min()
@@ -727,10 +849,11 @@ def cor_matrix(df):
     Returns:
         A seaborn PairGrid.
     """
+
     def corr_upper(xdata, ydata, **kwargs):
         nas = np.logical_or(np.isnan(xdata.values), np.isnan(ydata.values))
-        cmap = kwargs['cmap']
-        norm = kwargs['norm']
+        cmap = kwargs["cmap"]
+        norm = kwargs["norm"]
         ax = plt.gca()
         ax.tick_params(bottom=False, top=False, left=False, right=False)
         sns.despine(ax=ax, bottom=True, top=True, left=True, right=True)
@@ -738,27 +861,42 @@ def cor_matrix(df):
         facecolor = cmap(norm(r))
         ax.set_facecolor(facecolor)
         lightness = (max(facecolor[:3]) + min(facecolor[:3])) / 2
-        ax.annotate(f"r={r:.2f}", xy=(.5, .5), xycoords=ax.transAxes,
-                    color='black', size=8, ha='center', va='center')
+        ax.annotate(
+            f"r={r:.2f}",
+            xy=(0.5, 0.5),
+            xycoords=ax.transAxes,
+            color="black",
+            size=8,
+            ha="center",
+            va="center",
+        )
 
     def set_font(xdata, ydata, **kwargs):
         ax = plt.gca()
-        ax.set_ylabel('')
-        ax.set_xlabel('')
-        ax.tick_params(axis='x', labelsize=8)
-        ax.tick_params(axis='y', labelsize=8)
+        ax.set_ylabel("")
+        ax.set_xlabel("")
+        ax.tick_params(axis="x", labelsize=8)
+        ax.tick_params(axis="y", labelsize=8)
 
     g = sns.PairGrid(df, dropna=True, diag_sharey=False)
-    g.fig.set_size_inches(18.35*cm, 18.35*cm)
+    g.fig.set_size_inches(18.35 * cm, 18.35 * cm)
 
-    g.map_upper(corr_upper, cmap=plt.get_cmap('turbo'),
-                norm=plt.Normalize(vmin=-1, vmax=1))
+    g.map_upper(
+        corr_upper, cmap=plt.get_cmap("turbo"), norm=plt.Normalize(vmin=-1, vmax=1)
+    )
 
-    g.map_diag(sns.histplot, kde=True, kde_kws=dict(cut=3), alpha=1,
-               edgecolor=rwth_colors.colors[('blue', 50)], shrink=.8, fill=False)
+    g.map_diag(
+        sns.histplot,
+        kde=True,
+        kde_kws=dict(cut=3),
+        alpha=1,
+        edgecolor=rwth_colors.colors[("blue", 50)],
+        shrink=0.8,
+        fill=False,
+    )
 
-    g.map_lower(sns.kdeplot, cmap='turbo')
-    g.map_lower(sns.rugplot, color=rwth_colors.colors[('blue', 100)])
+    g.map_lower(sns.kdeplot, cmap="turbo")
+    g.map_lower(sns.rugplot, color=rwth_colors.colors[("blue", 100)])
 
     g.map(set_font)
     return g

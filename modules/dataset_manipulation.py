@@ -25,7 +25,6 @@ def df_2_arrays(df, label, feature_keys):
     return x_arr, y_arr
 
 
-
 def mix_split_df(df, validation_split, random_state):
     """
     Split the dataframe into training and validation dataframes.
@@ -50,7 +49,14 @@ def mix_split_df(df, validation_split, random_state):
     return df_train, df_validation
 
 
-def get_set(df, label, feature_keys=[], validation_split=0.2, output_intervals_for_test = [[1,2]], random_state=1):
+def get_set(
+    df,
+    label,
+    feature_keys=[],
+    validation_split=0.2,
+    output_intervals_for_test=[[1, 2]],
+    random_state=1,
+):
     """
     Get the training and test data from a dataframe.
 
@@ -70,14 +76,27 @@ def get_set(df, label, feature_keys=[], validation_split=0.2, output_intervals_f
     df_test = df.head(0).copy()
     df_train_validation = df.copy()
     for index in range(np.shape(output_intervals_for_test)[0]):
-        df_test = pd.concat([df_test, df.loc[(df[label] >= output_intervals_for_test[index][0]) & (
-            df[label] <= output_intervals_for_test[index][1])]])
-        df_train_validation.drop(df_train_validation[(df_train_validation[label] >= output_intervals_for_test[index][0]) & (
-            df_train_validation[label] <= output_intervals_for_test[index][1])].index, inplace=True)
+        df_test = pd.concat(
+            [
+                df_test,
+                df.loc[
+                    (df[label] >= output_intervals_for_test[index][0])
+                    & (df[label] <= output_intervals_for_test[index][1])
+                ],
+            ]
+        )
+        df_train_validation.drop(
+            df_train_validation[
+                (df_train_validation[label] >= output_intervals_for_test[index][0])
+                & (df_train_validation[label] <= output_intervals_for_test[index][1])
+            ].index,
+            inplace=True,
+        )
 
     # Split the dataframe
     df_train, df_validation = mix_split_df(
-        df_train_validation, validation_split, random_state)
+        df_train_validation, validation_split, random_state
+    )
 
     # Convert dataframe to arrays
     x_train, y_train = df_2_arrays(df_train, label, feature_keys)
@@ -92,9 +111,10 @@ def get_set(df, label, feature_keys=[], validation_split=0.2, output_intervals_f
         "df_train": df_train,
         "df_validation": df_validation,
         "df_test": df_test,
-        "label": label
+        "label": label,
     }
     return data
+
 
 def list_2_json(list_, filename, folder="data/feature_selections/"):
     """

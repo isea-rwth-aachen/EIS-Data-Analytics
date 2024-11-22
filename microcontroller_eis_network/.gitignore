@@ -1,0 +1,60 @@
+#settings
+.settings/
+
+#metadata
+.metadata/
+
+#Debug
+/Debug/**
+!microcontroller_eis_network.bin
+/Release/**
+
+#ai toolchain
+.ai/
+
+# keep the project files
+!.project
+
+# all test data files
+/Core/Inc/test_array_*
+!/Core/Inc/test_array_example_data_SISO_Linear_Z_abs_100hz_Temperature_940757438541927485_33edb75dde754d34aa05820499c475de.h
+
+# Prerequisites
+*.d
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Linker output
+*.ilk
+*.map
+*.exp
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb

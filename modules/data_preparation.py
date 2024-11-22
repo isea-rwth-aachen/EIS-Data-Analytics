@@ -16,7 +16,6 @@ from scipy import interpolate
 from scipy.signal import find_peaks
 from IPython import display as IPdisplay
 
-from impedance import preprocessing
 from impedance.models.circuits import CustomCircuit
 from impedance.models.circuits.fitting import rmse
 from impedance.validation import linKK
@@ -440,11 +439,6 @@ class FrequencySelectWidget:
             layout=widgets.Layout(width="20%"),
         )
 
-        frequency_groups_average_length = np.sum(
-            self.frequency_groups_df.occurrence
-            / np.sum(self.frequency_groups_df.occurrence)
-            * self.frequency_groups_df.length
-        )
         self.plot_hist_freq(
             df.index.get_level_values(2), df.index.get_level_values(2), axs
         )
@@ -567,11 +561,6 @@ class FrequencySelectWidget:
             None
         """
 
-        frequency_groups_average_length = np.sum(
-            self.frequency_groups_df.occurrence
-            / np.sum(self.frequency_groups_df.occurrence)
-            * self.frequency_groups_df.length
-        )
         if f_menu_sel_p == "Frequency Group":
             self.dropdown.disabled = False
             self.slider_min.disabled = True
@@ -753,10 +742,6 @@ class LinkkSelectWidget:
         ax.set_xticks([])
         ax.set_ylabel("Quantile/Max Absolute \nresidual of the measurement in Ohm")
         ax.grid(True)
-        linKK_max = (
-            np.ceil(np.max(df.groupby(level=[0, 1])["linKK"].mean().to_numpy()) * 100)
-            / 100
-        )
         ax.plot(
             range(len(df.groupby(level=[0, 1])["linKK"].mean().to_numpy())),
             np.ones([len(df.groupby(level=[0, 1])["linKK"].mean().to_numpy()), 1])
@@ -777,7 +762,6 @@ class LinkkSelectWidget:
             ax (matplotlib.axes.Axes): The axis to plot on.
             alpha (float): The alpha of the plot.
         """
-        x_data = np.arange(len(df.groupby(level=[0, 1])["linKK"].mean().to_numpy()))
         y_data = df.groupby(level=[0, 1])["linKK"].mean().to_numpy()
 
         x_jittered = st.t(df=6, scale=0.04).rvs(len(y_data))
@@ -1156,7 +1140,7 @@ def add_ECMfit_parallel_func(
                 )
 
                 try:
-                    if global_fit == False:
+                    if not global_fit:
                         # https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.leastsq.html#scipy.optimize.leastsq
                         c_circuit.fit(
                             frequencies,
@@ -1766,7 +1750,15 @@ def eis_interpolate_restruct(df, new_frequencies):
     return df
 
 
-def add_DRT_parallel_func(df, key_lookup_df, drt_plot=False, feature=None, cmap=None):
+def add_DRT_parallel_func(
+    df,
+    key_lookup_df,
+    drt_plot=False,
+    feature=None,
+    cmap=None,
+    cbar=None,
+    plot_peaks=True,
+):
     """
     Add the DRT values to the dataframe. If the DRT plot is enabled, plot the DRT values.
     Parameters:
@@ -1775,13 +1767,14 @@ def add_DRT_parallel_func(df, key_lookup_df, drt_plot=False, feature=None, cmap=
         drt_plot (bool): Whether or not to plot the DRT values.
         feature (str): The feature to use for coloring the DRT plot.
         cmap (matplotlib.colors.Colormap): The colormap to use for coloring the DRT plot.
+        plot_peaks (bool): Whether or not to plot the peaks. Default is True.
     Returns:
         pd.DataFrame or list: The modified dataframe with DRT values, or the list [fig, axes, df] if drt_plot is True.
     """
 
     if drt_plot:
-        fig, axes = eisplot.plt.subplots()
-        if eisplot.mpl.rcParams["text.usetex"] == True:
+        fig, axes = eisplot.plt.subplots(figsize=(12 * eisplot.cm, 10 * eisplot.cm))
+        if eisplot.mpl.rcParams["text.usetex"]:
             eisplot.plt.xlabel(r"$\tau$ in s")
             eisplot.plt.ylabel(r"$\gamma$ in $\Omega$")
         else:
@@ -1790,8 +1783,8 @@ def add_DRT_parallel_func(df, key_lookup_df, drt_plot=False, feature=None, cmap=
         eisplot.plt.grid()
 
         if feature is not None:
-            if cmap is None:
-                cmap = eisplot.setup_colormap(
+            if cmap is None or cbar is None:
+                cmap, cbar = eisplot.setup_colormap(
                     df[feature].min(), df[feature].max(), feature, fig, axes
                 )
             colors = cmap.to_rgba(df[feature].to_numpy("float64"))
@@ -1831,8 +1824,6 @@ def add_DRT_parallel_func(df, key_lookup_df, drt_plot=False, feature=None, cmap=
                 tau_vec = np.logspace(
                     -np.log10(freq_max), -np.log10(freq_min), num=N_freqs, endpoint=True
                 )
-                omega_vec = 2.0 * np.pi * freq_vec
-                N_taus = tau_vec.shape[0]
 
                 shape_control = "FWHM"
                 coeff = 0.5
@@ -1845,7 +1836,6 @@ def add_DRT_parallel_func(df, key_lookup_df, drt_plot=False, feature=None, cmap=
                 # expansion_type = 'Inverse Quadratic'
                 # expansion_type = 'Inverse Quadric'
                 # expansion_type = 'Cauchy'
-                data_used = "re+im"
                 include_RL = "L"  # 'R' 'R+L'
                 derivative_RR = "1st"
 
@@ -1870,7 +1860,7 @@ def add_DRT_parallel_func(df, key_lookup_df, drt_plot=False, feature=None, cmap=
                 cv_type = "GCV"
 
                 save_stdout = sys.stdout
-                sys.stdout = mystdout = StringIO()
+                sys.stdout = StringIO()
                 lambda_GCV = general_fun.optimal_lambda(
                     A_re, A_im, Z_re, Z_im, M, log_lambda_0, cv_type
                 )
@@ -1886,7 +1876,7 @@ def add_DRT_parallel_func(df, key_lookup_df, drt_plot=False, feature=None, cmap=
                 bound_mat = np.eye(lb.shape[0])
 
                 save_stdout = sys.stdout
-                sys.stdout = mystdout = StringIO()
+                sys.stdout = StringIO()
                 H_combined, c_combined = general_fun.quad_format_combined(
                     A_re, A_im, Z_re, Z_im, M, lambda_GCV
                 )
@@ -1923,32 +1913,36 @@ def add_DRT_parallel_func(df, key_lookup_df, drt_plot=False, feature=None, cmap=
                         axes.semilogx(
                             tau_vec, gamma_RR_GCV, c=colors[mask], linestyle="-"
                         )
-                        axes.plot(
-                            tau_vec[peaks],
-                            gamma_RR_GCV[peaks],
-                            "x",
-                            c=colors[mask],
-                            linestyle="None",
-                            alpha=1,
-                        )
+                        if plot_peaks:
+                            axes.plot(
+                                tau_vec[peaks],
+                                gamma_RR_GCV[peaks],
+                                "x",
+                                c=colors[mask],
+                                linestyle="None",
+                                alpha=1,
+                            )
                     else:
                         axes.semilogx(tau_vec, gamma_RR_GCV)
-                        axes.plot(
-                            tau_vec[peaks],
-                            gamma_RR_GCV[peaks],
-                            "x",
-                            linestyle="None",
-                            alpha=1,
-                        )
+                        if plot_peaks:
+                            axes.plot(
+                                tau_vec[peaks],
+                                gamma_RR_GCV[peaks],
+                                "x",
+                                linestyle="None",
+                                alpha=1,
+                            )
                     hfig.update(fig)
                     time.sleep(0.1)
     if drt_plot:
-        return [fig, axes, df]
+        return [fig, axes, cmap, cbar, df]
     else:
         return df
 
 
-def add_DRT(df, key_lookup_df, drt_plot=False, feature=None, cmap=None):
+def add_DRT(
+    df, key_lookup_df, drt_plot=False, feature=None, cmap=None, plot_peaks=True
+):
     """
     Add DRT to the dataframe.
 
@@ -1958,6 +1952,7 @@ def add_DRT(df, key_lookup_df, drt_plot=False, feature=None, cmap=None):
         drt_plot (bool): Whether or not to plot the DRT.
         feature (str): The feature to use for coloring the DRT plot.
         cmap (matplotlib.colors.Colormap): The colormap to use for coloring the DRT plot.
+        plot_peaks (bool): Whether or not to plot the peaks. Default is True.
 
     Returns:
         pd.DataFrame or list: The modified dataframe with DRT values, or the list [fig, axes, df] if drt_plot is True.
@@ -1976,8 +1971,8 @@ def add_DRT(df, key_lookup_df, drt_plot=False, feature=None, cmap=None):
     drt_plot_list = list(itertools.repeat(drt_plot, cpu_count))
 
     if drt_plot:
-        [fig, axes, df] = add_DRT_parallel_func(
-            df, key_lookup_df, drt_plot, feature, cmap
+        [fig, axes, cmap, cbar, df] = add_DRT_parallel_func(
+            df, key_lookup_df, drt_plot, feature, cmap, plot_peaks
         )
     else:
         results = pool.starmap(
@@ -1987,7 +1982,7 @@ def add_DRT(df, key_lookup_df, drt_plot=False, feature=None, cmap=None):
         pool.close()
 
     if drt_plot:
-        return [fig, axes, df]
+        return [fig, axes, cmap, cbar, df]
     else:
         return df
 
@@ -2147,4 +2142,26 @@ def add_EIS_Extrema(df, key_lookup_df):
     )
     df = pd.concat(results)
     pool.close()
+    return df
+
+
+def add_equivalent_full_cycles(df, columnname="equivalent_full_cycles"):
+    """
+    Add the equivalent full cycles of the battery to the dataframe.
+    This is done by finding the capacity of every cell and divide the Ah througput with it.
+
+    Parameters:
+        df (pd.DataFrame): The dataframe containing columns "Ah_throughput" and "Capacity".
+        columnname (str): name of the new column defaults to "equivalent_full_cycles"
+
+    Returns:
+        pd.DataFrame: The dataframe with the equivalent full cycles added
+    """
+    cell_names = list(set(df.index.get_level_values(0)))
+    df.insert(df.columns.get_loc("Ah_throughput") + 1, columnname, 0.0)
+    for cell_name in cell_names:
+        cell_Ah_capacity = np.max(np.abs(df.loc[cell_name, "Capacity"].to_numpy()))
+        df.loc[cell_name, columnname] = df.loc[
+            cell_name, "Ah_throughput"
+        ].to_numpy() / (2 * cell_Ah_capacity)
     return df

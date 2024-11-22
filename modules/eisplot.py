@@ -5,6 +5,7 @@ from random import randint
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.sankey import Sankey
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 import numpy as np
 import pandas as pd
 from cycler import cycler
@@ -27,6 +28,8 @@ metric_dic = {
     "Current": "A",
     "Wh_throughput": "Wh",
     "Capacity_current": "A",
+    "Z_phase": "rad",
+    "Z_abs": "$\Omega$",
 }
 
 # if no color is selected, use the default colors of the cycler, which are:
@@ -69,15 +72,16 @@ cc = cycler(linestyle=rwth_colors_cycler_linestyle) * cycler(
 sns.set(style="white")
 
 mpl.rcParams["axes.prop_cycle"] = cc
-mpl.rcParams["axes.facecolor"] = "none"
-mpl.rcParams["axes.labelsize"] = 8
-mpl.rcParams["axes.titlesize"] = 8
-mpl.rcParams["figure.facecolor"] = "none"
-mpl.rcParams["font.size"] = 8
+mpl.rcParams["axes.facecolor"] = "white"
+mpl.rcParams["figure.facecolor"] = "white"
 mpl.rcParams["image.cmap"] = "turbo"
-mpl.rcParams["xtick.labelsize"] = 8
-mpl.rcParams["ytick.labelsize"] = 8
-mpl.rcParams["legend.fontsize"] = 8
+font_size = 8
+mpl.rcParams["axes.labelsize"] = font_size
+mpl.rcParams["axes.titlesize"] = font_size
+mpl.rcParams["font.size"] = font_size
+mpl.rcParams["xtick.labelsize"] = font_size
+mpl.rcParams["ytick.labelsize"] = font_size
+mpl.rcParams["legend.fontsize"] = font_size
 
 
 def get_single_cellnames(cell_list, str_cutoff=-11):
@@ -98,7 +102,7 @@ def get_single_cellnames(cell_list, str_cutoff=-11):
 
 def setup_scatter(
     dataset,
-    mse,
+    rmse,
     title=True,
     legend=False,
     fig=None,
@@ -107,13 +111,14 @@ def setup_scatter(
     ax_ylabel=True,
     subplots_adjust=True,
     add_trendline=True,
+    label=None,
 ):
     """
     Setup the scatter plot for the given dataset.
 
     Parameters:
         dataset (dict): The dataset dictionary containing the dataframes and labels.
-        mse (float): The mean squared error of the model.
+        rmse (float): The root mean squared error of the model.
         title (bool): Whether or not to show the title.
         legend (bool): Whether or not to show the legend.
         fig (Figure): The figure to plot on.
@@ -131,9 +136,12 @@ def setup_scatter(
     ax.grid(True)
     ax.set_aspect("equal", "box")
 
-    label = dataset["label"]
+    if label is None:
+        label = dataset["label"]
+        label = "".join(label)
     label_latex = label
-    label_latex = label_latex.replace("_", "\\textunderscore ")
+    if mpl.rcParams["text.usetex"]:
+        label_latex = label_latex.replace("_", "\\textunderscore ")
 
     if ax_xlabel:
         ax.set_xlabel("actual: " + label_latex + " in " + metric_dic[label])
@@ -152,7 +160,7 @@ def setup_scatter(
         ax.plot(x, x, label="ideal", color=rwth_colors.colors[("green", 100)])
 
     if title:
-        title = str("Prediction of " + label_latex + " (mse=" + str(mse)[:4] + ")")
+        title = str("Prediction of " + label_latex + " (rmse=" + str(rmse)[:4] + ")")
         ax.set_title(title)
 
     if subplots_adjust:
@@ -198,7 +206,7 @@ def cell_scatter(
     Y_predicted,
     is_test=False,
     is_validation=False,
-    cell_names=[],
+    cell_names=[""],
     dic=None,
     title=True,
     legend=False,
@@ -234,26 +242,28 @@ def cell_scatter(
     # get label/target string and dataframe of test data
     if is_test:
         df_plot = dataset["df_test"]
-        scatter_color = mpl.colors.to_rgba(rwth_colors.colors[("lavender", 100)], 0.5)
+        scatter_color = mpl.colors.to_rgba(rwth_colors.colors[("blue", 100)], 0.5)
         scatter_marker = "2"
     elif is_validation:
         df_plot = dataset["df_validation"]
-        scatter_color = mpl.colors.to_rgba(rwth_colors.colors[("orange", 100)], 0.5)
+        scatter_color = mpl.colors.to_rgba(rwth_colors.colors[("turqoise", 100)], 0.5)
         scatter_marker = "1"
     else:
         df_plot = dataset["df_train"]
-        scatter_color = mpl.colors.to_rgba(rwth_colors.colors[("blue", 100)], 0.5)
+        scatter_color = mpl.colors.to_rgba(rwth_colors.colors[("petrol", 100)], 0.5)
         scatter_marker = "."
 
     label = dataset["label"]
 
-    # calculate mse
-    Y_test = df_plot[label].to_numpy()
-    mse = ((Y_predicted - Y_test) ** 2).mean()
+    # calculate rmse
+    Y_test = df_plot[label].to_numpy().ravel()
+    Y_predicted_copy = Y_predicted.copy()
+    Y_predicted_copy = Y_predicted_copy.ravel()
+    rmse = np.sqrt(((Y_predicted_copy - Y_test) ** 2).mean())
 
     fig, ax = setup_scatter(
         dataset,
-        mse,
+        rmse,
         title=title,
         legend=legend,
         fig=fig,
@@ -273,7 +283,7 @@ def cell_scatter(
         y_test_cell_name = df_cell_name[label].to_numpy()
 
         # select corresponding predictions
-        Y_predicted_ser = pd.Series(Y_predicted)
+        Y_predicted_ser = pd.Series(Y_predicted_copy)
         Y_predicted_cell_name = Y_predicted_ser.loc[indexes].to_numpy()
 
         # get label for the legend
@@ -292,6 +302,49 @@ def cell_scatter(
     if legend:
         ax.legend()
 
+    return fig, ax
+
+
+def cell_scatter_nn(dataset, Y_predicted, **kwargs):
+    """
+    Plot the predicted values for each cell in the dataset. Difference to cell_scatter is that it can deal with multidimensional labels
+
+    Parameters:
+        dataset (dict): The dataset dictionary containing the dataframes and labels.
+        Y_predicted (array-like): The predicted values for each cell.
+        is_train (bool): If True, the training data is plotted.
+        cell_names (list): The cell names to plot.
+        dic (dict): The dictionary of cell names and labels.
+        title (bool): Whether or not to show the title of the plot.
+        legend (bool): Whether or not to show the legend.
+        fig: The figure to plot on.
+        ax: The axis to plot on.
+        ax_xlabel (bool): Whether or not to show the x-axis label.
+        ax_ylabel (bool): Whether or not to show the y-axis label.
+        subplots_adjust (bool): Whether or not to adjust the subplots.
+        add_trendline (bool): Whether or not to add a trendline to the plot.
+
+    Returns:
+        fig: The figure.
+        ax: The axis.
+    """
+    label_origin = dataset["label"]
+
+    if type(label_origin) is str:
+        label = [label_origin]
+    else:
+        label = label_origin
+
+    fig, axes = plt.subplots(1, len(label))
+    for label_index, single_label in enumerate(label):
+        if len(label) == 1:
+            ax = axes
+        else:
+            ax = axes[label_index]
+        dataset["label"] = single_label
+        y_pred = Y_predicted[:, label_index]
+        cell_scatter(dataset, y_pred, fig=fig, ax=ax, **kwargs)
+    dataset["label"] = label_origin
     return fig, ax
 
 
@@ -342,7 +395,7 @@ def reduce_df(df, feature, nr_intervals, interval_type="lin"):
 
 
 def setup_Bode(
-    title,
+    title=None,
     legend=False,
     fig=None,
     ax1=None,
@@ -496,7 +549,7 @@ def setup_colormap(min_value, max_value, feature, fig, axes, location="right"):
     else:
         cbar.set_label(feature)
 
-    return cmap
+    return cmap, cbar
 
 
 def plot_bode_feature(
@@ -518,6 +571,9 @@ def plot_bode_feature(
     ax2_ylabel=True,
     subplots_adjust=True,
     cmap=None,
+    cbar=None,
+    set_limits=True,
+    set_ticks=True,
 ):
     """
     Plot the Bode diagram for a given feature.
@@ -541,11 +597,15 @@ def plot_bode_feature(
         ax2_ylabel: Whether to show the y-axis label for the phase plot.
         subplots_adjust: Whether to adjust the subplots layout.
         cmap: The colormap to use for coloring the plot.
+        cbar: The color bar to use for coloring the plot.
+        set_limits: Whether to set the limits of the plot.
+        set_ticks: Whether to set the ticks of the plot.
 
     Returns:
         fig: The modified figure.
         (ax1, ax2): The modified axes.
         cmap: The modified colormap.
+        cbar: The modified color bar.
     """
     phase_exists = len(list(filter(lambda x: "EIS_Z_phase" in x, df.columns))) > 0
 
@@ -568,8 +628,8 @@ def plot_bode_feature(
             subplots_adjust=subplots_adjust,
         )
 
-    if cmap is None:
-        cmap = setup_colormap(
+    if cmap is None or cbar is None:
+        cmap, cbar = setup_colormap(
             df[feature].min(), df[feature].max(), feature, fig, (ax1, ax2)
         )
 
@@ -588,12 +648,13 @@ def plot_bode_feature(
         segs_phase[:, :, 0] = frequencies
         segs_phase[:, :, 1] = df[phase_keys] / np.pi * 180
 
-    ax1.set_xlim(segs_abs[:, :, 0].min(), segs_abs[:, :, 0].max())
-    ax1.set_ylim(segs_abs[:, :, 1].min(), segs_abs[:, :, 1].max())
+    if set_limits:
+        ax1.set_xlim(segs_abs[:, :, 0].min(), segs_abs[:, :, 0].max())
+        ax1.set_ylim(segs_abs[:, :, 1].min(), segs_abs[:, :, 1].max())
 
-    if phase_exists:
-        ax2.set_xlim(segs_phase[:, :, 0].min(), segs_phase[:, :, 0].max())
-        ax2.set_ylim(segs_phase[:, :, 1].min(), segs_phase[:, :, 1].max())
+        if phase_exists:
+            ax2.set_xlim(segs_phase[:, :, 0].min(), segs_phase[:, :, 0].max())
+            ax2.set_ylim(segs_phase[:, :, 1].min(), segs_phase[:, :, 1].max())
 
     # color for both the same
     colors = cmap.to_rgba(df[feature].to_numpy("float64"))
@@ -667,12 +728,13 @@ def plot_bode_feature(
         y2_min = np.min(ax2.get_yticks())
         y2_max = np.max(ax2.get_yticks())
 
-    # always go for the delta_x, there the font size limits everything
-    ax1.set_yticks(np.arange(y1_min, y1_max + delta_y1, delta_y1))
-    if phase_exists:
-        ax2.set_yticks(np.arange(y2_min, y2_max + delta_y2, delta_y2))
+    if set_ticks:
+        # always go for the delta_x, there the font size limits everything
+        ax1.set_yticks(np.arange(y1_min, y1_max + delta_y1, delta_y1))
+        if phase_exists:
+            ax2.set_yticks(np.arange(y2_min, y2_max + delta_y2, delta_y2))
 
-    return fig, (ax1, ax2), cmap
+    return fig, (ax1, ax2), cmap, cbar
 
 
 def get_highlight_keys_nyquist(key_lookup_df, highlight_freqs):
@@ -722,6 +784,9 @@ def plot_nyquist_feature(
     subplots_adjust=True,
     legend=False,
     cmap=None,
+    cbar=None,
+    set_limits=True,
+    set_ticks=True,
 ):
     """
     Plot the Nyquist diagram for a given feature.
@@ -743,9 +808,15 @@ def plot_nyquist_feature(
         subplots_adjust: Whether to adjust the subplots.
         legend: Whether to show the legend.
         cmap: The colormap to use.
+        cbar: The color bar to use.
+        set_limits: Whether to set the limits of the plot.
+        set_ticks: Whether to set the ticks of the plot.
 
     Returns:
-        The modified figure, axis, and colormap.
+        fig: The modified figure.
+        ax: The modified axis.
+        cmap: The modified colormap.
+        cbar: The modified color bar.
     """
 
     if reduce:
@@ -765,8 +836,10 @@ def plot_nyquist_feature(
             subplots_adjust=subplots_adjust,
         )
 
-    if cmap is None:
-        cmap = setup_colormap(df[feature].min(), df[feature].max(), feature, fig, ax)
+    if cmap is None or cbar is None:
+        cmap, cbar = setup_colormap(
+            df[feature].min(), df[feature].max(), feature, fig, ax
+        )
     colors = cmap.to_rgba(df[feature].to_numpy("float64"))
 
     # get keys of dataframe eis columns
@@ -816,8 +889,9 @@ def plot_nyquist_feature(
     y_min = segs_nyq[:, :, 1].min()
     y_max = segs_nyq[:, :, 1].max()
 
-    ax.set_xlim(x_min, x_max)
-    ax.set_ylim(y_max, y_min)
+    if set_limits:
+        ax.set_xlim(x_min, x_max)
+        ax.set_ylim(y_max, y_min)
 
     # now based on the ticks
     delta_x = np.median(np.diff(ax.get_xticks()))
@@ -832,11 +906,12 @@ def plot_nyquist_feature(
     y_min = np.min(ax.get_yticks())
     y_max = np.max(ax.get_yticks())
 
-    # always go for the delta_x, there the font size limits everything
-    ax.set_yticks(np.arange(y_min, y_max + delta, delta))
-    ax.set_xticks(np.arange(x_min, x_max + delta, delta))
+    if set_ticks:
+        # always go for the delta_x, there the font size limits everything
+        ax.set_yticks(np.arange(y_min, y_max + delta, delta))
+        ax.set_xticks(np.arange(x_min, x_max + delta, delta))
 
-    return fig, ax, cmap
+    return fig, ax, cmap, cbar
 
 
 def cor_matrix(df):
@@ -860,13 +935,12 @@ def cor_matrix(df):
         r, _ = stats.pearsonr(xdata[~nas], ydata[~nas])
         facecolor = cmap(norm(r))
         ax.set_facecolor(facecolor)
-        lightness = (max(facecolor[:3]) + min(facecolor[:3])) / 2
         ax.annotate(
             f"r={r:.2f}",
             xy=(0.5, 0.5),
             xycoords=ax.transAxes,
             color="black",
-            size=8,
+            size=font_size,
             ha="center",
             va="center",
         )
@@ -875,11 +949,11 @@ def cor_matrix(df):
         ax = plt.gca()
         ax.set_ylabel("")
         ax.set_xlabel("")
-        ax.tick_params(axis="x", labelsize=8)
-        ax.tick_params(axis="y", labelsize=8)
+        ax.tick_params(axis="x", labelsize=font_size)
+        ax.tick_params(axis="y", labelsize=font_size)
 
     g = sns.PairGrid(df, dropna=True, diag_sharey=False)
-    g.fig.set_size_inches(18.35 * cm, 18.35 * cm)
+    g.figure.set_size_inches(16 * cm, 16 * cm)
 
     g.map_upper(
         corr_upper, cmap=plt.get_cmap("turbo"), norm=plt.Normalize(vmin=-1, vmax=1)
@@ -900,3 +974,150 @@ def cor_matrix(df):
 
     g.map(set_font)
     return g
+
+
+def plot_gradients(gradient_arr, frequencies, ax, title=""):
+    """
+    plot displays the gradient distribution of multiple models.
+    The gradient of the model is the gradient of the output with respect to the first layer of the model.
+    It is assumed that the model's first layer is a weakly connected layer with each neuron corresponding to an impedance at a certain frequency.
+    The plot shows how the absolute gradient values of different models are distributed.
+    The corresponding frequencies of the gradient components are on the logaritmic x axis
+    @param gradient_arr - numpy.array containing one 'mean' gradient of each model
+    @param frequencies - np.array (1D) containing the frequencies corresponding to the features
+    @param title - title of the plot. Makes Sense to adapt it
+    @returns a tuple of figure and ax of the plot
+    """
+    # frequencies = key_lookup_df["frequency"].to_numpy()
+    plot_arr = gradient_arr.swapaxes(0, 1)
+
+    # fig, ax = plt.subplots(1, 1)
+
+    # just for the width
+    w = 0.1
+
+    def width(p, w):
+        return 10 ** (np.log10(p) + w / 2.0) - 10 ** (np.log10(p) - w / 2.0)
+
+    # set properties of plot
+    boxprops = dict(linewidth=2.5)
+    medianprops = dict(linewidth=3, color="red")
+
+    # just plot
+    ax.boxplot(
+        list(plot_arr),
+        positions=list(frequencies),
+        widths=width(frequencies, w),
+        boxprops=boxprops,
+        medianprops=medianprops,
+    )
+    ax.set_xscale("log")
+    ax.set_xlabel("Frequencies in Hz")
+    ax.set_ylabel(
+        r"$ \frac{|\nabla_{n_{f}} \hat{y} |}{\Vert \nabla_{n_{f}} \hat{y} \Vert_2 } $",
+        rotation="horizontal",
+        ha="right",
+    )
+    ax.set_title(title)
+    return ax
+
+
+def plot_component_gradient(
+    grad_arr, key_lookup_df, title="", components=["magnitude", "phase"]
+):
+    grad_length = grad_arr.shape[1]
+    nr_freqs = key_lookup_df.shape[0]
+    assert grad_length == 2 * nr_freqs, f" gradient array has length \
+        {grad_length} but is has to match \
+        the 2 times nr of frequencies in key_lookup_df: {2*nr_freqs}"
+
+    # create 3 subplots in a grid
+    fig = plt.figure()
+    fig.suptitle(title)
+    gs = fig.add_gridspec(2, 2)
+    axComponent1 = fig.add_subplot(gs[0, 0])
+    axComponent2 = fig.add_subplot(gs[0, 1])
+    axSum = fig.add_subplot(gs[1, :])
+
+    comp1_gradients = grad_arr[:, :nr_freqs]
+    comp2_gradients = grad_arr[:, nr_freqs:]
+    sum_gradients = comp1_gradients + comp2_gradients
+
+    frequencies = key_lookup_df["frequency"].to_numpy()
+    plot_gradients(comp1_gradients, frequencies, axComponent1, title=components[0])
+    plot_gradients(comp2_gradients, frequencies, axComponent2, title=components[1])
+    plot_gradients(sum_gradients, frequencies, axSum, title="sum")
+
+    return fig, (axComponent1, axComponent2, axSum)
+
+
+def plot_gradient_result(grad_result, title="", include_sum=False):
+    feature_keys = grad_result["gradients"].columns.to_list()
+    (freq_dic, select_dic) = get_frequency_dic(feature_keys, get_select_dic=True)
+    components = list(freq_dic.keys())
+
+    # create 3 subplots in a grid
+    fig = plt.figure()
+    fig.suptitle(title)
+
+    nr_comp = len(components)
+    grad_arr = grad_result["gradients"].to_numpy()
+
+    # map out the layout of the plot
+    if include_sum:
+        # if the sum of components is included in plot then there needs to be an extra row
+        gs = fig.add_gridspec(2, nr_comp)
+        grad_len = len(select_dic[components[0]])
+        comp_gradients = np.zeros([nr_comp, np.shape(grad_arr)[0], grad_len])
+
+        axes_components = [fig.add_subplot(gs[0, i]) for i in range(nr_comp)]
+        axSum = fig.add_subplot(gs[1, :])
+        axes_components.append(axSum)
+        # TODO include assert to check frequency equality
+    else:
+        # otherwise just plot beneath
+        gs = fig.add_gridspec(nr_comp, 1)
+        axes_components = [fig.add_subplot(gs[i, 0]) for i in range(nr_comp)]
+
+    for nr_comp, comp in enumerate(components):
+        gradients = grad_arr[:, select_dic[comp]]
+        plot_gradients(gradients, freq_dic[comp], axes_components[nr_comp], title=comp)
+
+        if include_sum:
+            comp_gradients[nr_comp] = gradients
+
+    if include_sum:
+        sum_gradients = np.sum(comp_gradients, axis=0)
+        plot_gradients(sum_gradients, freq_dic[components[0]], axSum, title="sum")
+
+    return fig, axes_components
+
+
+def get_frequency_dic(feature_keys, get_select_dic=False):
+    """
+    get a dictionary with unique components of the feature keys (like Re, Im, magnitude ...)
+    and the corresponding frequency array of that unique component
+    @param feature_keys - list of strings in format <something>_<component>_<frequency>
+    @return - dictionary with components as keys and frequency arrays as values (e.g. {"Re": [0.1, 1, 10], "Im": [0.1, 1, 10]})
+    """
+    # get frequencies and components from feature key strints
+    # last part of string divided by "_" is frequency
+    frequencies = [float(key.split("_")[-1]) for key in feature_keys]
+    frequencies = np.array(frequencies)
+
+    components = [str(key.split("_")[-2]) for key in feature_keys]
+    components = np.array(components)
+    components_unique = list(set(components))
+
+    frequency_dic = {}
+    select_dic = {}
+
+    for comp in components_unique:
+        select_comp = np.where(components == comp)[0]
+        frequency_dic[comp] = frequencies[select_comp]
+        select_dic[comp] = select_comp
+
+    if get_select_dic:
+        return frequency_dic, select_dic
+    else:
+        return frequency_dic

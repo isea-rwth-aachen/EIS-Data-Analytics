@@ -1,0 +1,114 @@
+ST Edge AI Core v1.0.0-19894
+Created date          : 2024-11-22 10:09:42
+Parameters            : generate --target stm32f4 --name eis_network -m C:/Data/Git/eis_data_analytics/microcontroller_eis_network/onnx_export/example_data_SISO_Linear_Z_abs_100hz_Temperature_940757438541927485_33edb75dde754d34aa05820499c475de.onnx --compression none --verbosity 1 --allocate-inputs --allocate-outputs --workspace C:/Users/abl/AppData/Local/Temp/mxAI_workspace86551689910992648910225597366030 --output C:/Users/abl/.stm32cubemx/eis_network_output
+
+Exec/report summary (generate)
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+model file         :   C:\Data\Git\eis_data_analytics\microcontroller_eis_network\onnx_export\example_data_SISO_Linear_Z_abs_100hz_Temperature_940757438541927485_33edb75dde754d34aa05820499c475de.onnx   
+type               :   onnx                                                                                                                                                                               
+c_name             :   eis_network                                                                                                                                                                        
+compression        :   none                                                                                                                                                                               
+options            :   allocate-inputs, allocate-outputs                                                                                                                                                  
+optimization       :   balanced                                                                                                                                                                           
+target/series      :   stm32f4                                                                                                                                                                            
+workspace dir      :   C:\Users\abl\AppData\Local\Temp\mxAI_workspace86551689910992648910225597366030                                                                                                     
+output dir         :   C:\Users\abl\.stm32cubemx\eis_network_output                                                                                                                                       
+model_fmt          :   float                                                                                                                                                                              
+model_name         :   example_data_SISO_Linear_Z_abs_100hz_Temperature_940757438541927485_33edb75dde754d34aa05820499c475de                                                                               
+model_hash         :   0x6b4dab6dfeafdc5422e76463bd38ab8c                                                                                                                                                 
+params #           :   2 items (8 B)                                                                                                                                                                      
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+input 1/1          :   'float_input', f32(1x1x1), 4 Bytes, activations                                                                                                                                    
+output 1/1         :   'matmul', f32(1x1x1), 4 Bytes, activations                                                                                                                                         
+macc               :   2                                                                                                                                                                                  
+weights (ro)       :   8 B (8 B) (1 segment)                                                                                                                                                              
+activations (rw)   :   8 B (8 B) (1 segment) *                                                                                                                                                            
+ram (total)        :   8 B (8 B) = 8 + 0 + 0                                                                                                                                                              
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+(*) 'input'/'output' buffers can be used from the activations buffer
+
+Model name - example_data_SISO_Linear_Z_abs_100hz_Temperature_940757438541927485_33edb75dde754d34aa05820499c475de
+------ ------------------------------ ----------- ------------ ------ --------------- --- ------------- ------------- -------------- 
+m_id   layer (type,original)          oshape      param/size     macc    connected to   | c_size        c_macc        c_type         
+------ ------------------------------ ----------- ------------ ------ --------------- --- ------------- ------------- -------------- 
+1      coef (Placeholder, MatMul)     [h:1,c:1]   1/4                                   | -4(-100.0%)                 
+------ ------------------------------ ----------- ------------ ------ --------------- --- ------------- ------------- -------------- 
+2      intercept (Placeholder, Add)   [c:1]       1/4                                   | +4(+100.0%)   +2(+100.0%)   Dense_[o][0]   
+------ ------------------------------ ----------- ------------ ------ --------------- --- ------------- ------------- -------------- 
+0      float_input (Input, )          [h:1,c:1]                                         |                             
+------ ------------------------------ ----------- ------------ ------ --------------- --- ------------- ------------- -------------- 
+1      matmul_output (Gemm, MatMul)   [h:1,c:1]                     2     float_input   |               -2(-100.0%)   
+                                                                                 coef   | 
+------ ------------------------------ ----------- ------------ ------ --------------- --- ------------- ------------- -------------- 
+2      variable (Eltwise, Add)        [h:1,c:1]                     1   matmul_output   |               -1(-100.0%)   
+                                                                            intercept   | 
+------ ------------------------------ ----------- ------------ ------ --------------- --- ------------- ------------- -------------- 
+model/c-model: macc=3/2 -1(-33.3%) weights=8/8  activations=--/8 io=--/0
+
+
+
+Generated C-graph summary
+------------------------------------------------------------------------------------------------------------------------
+model name            : example_data_SISO_Linear_Z_abs_100hz_Temperature_940757438541927485_33edb75dde754d34aa05820499c475de
+c-name                : eis_network
+c-node #              : 1
+c-array #             : 4
+activations size      : 8 (1 segment)
+weights size          : 8 (1 segment)
+macc                  : 2
+inputs                : ['float_input_output']
+outputs               : ['matmul_output_output']
+
+C-Arrays (4)
+------ ----------------------- ----------- ------------------------- ------------- --------- 
+c_id   name (*_array)          item/size   domain/mem-pool           c-type        comment   
+------ ----------------------- ----------- ------------------------- ------------- --------- 
+0      float_input_output      1/4         activations/**default**   float         /input    
+1      matmul_output_bias      1/4         weights/weights           const float             
+2      matmul_output_output    1/4         activations/**default**   float         /output   
+3      matmul_output_weights   1/4         weights/weights           const float             
+------ ----------------------- ----------- ------------------------- ------------- --------- 
+
+C-Layers (1)
+------ ---------------- ---- ------------ ------ ----- -------------------------- ------------------ 
+c_id   name (*_layer)   id   layer_type   macc   rom   tensors                    shape (array id)   
+------ ---------------- ---- ------------ ------ ----- -------------------------- ------------------ 
+0      matmul_output    2    Dense        2      8     I: float_input_output      f32(1x1x1) (0)     
+                                                       W: matmul_output_weights   f32(1x1) (3)       
+                                                       W: matmul_output_bias      f32(1) (1)         
+                                                       O: matmul_output_output    f32(1x1x1) (2)     
+------ ---------------- ---- ------------ ------ ----- -------------------------- ------------------ 
+
+
+
+Number of operations per c-layer
+------- ------ ----------------------- ----- -------------- 
+c_id    m_id   name (type)               #op           type 
+------- ------ ----------------------- ----- -------------- 
+0       2      matmul_output (Dense)       2   smul_f32_f32 
+------- ------ ----------------------- ----- -------------- 
+total                                      2 
+
+Number of operation types
+---------------- --- ----------- 
+operation type     #           % 
+---------------- --- ----------- 
+smul_f32_f32       2      100.0% 
+
+Complexity report (model)
+------ ----------- ------------------------- ------------------------- ------ 
+m_id   name        c_macc                    c_rom                     c_id   
+------ ----------- ------------------------- ------------------------- ------ 
+2      intercept   |||||||||||||||| 100.0%   |||||||||||||||| 100.0%   [0]    
+------ ----------- ------------------------- ------------------------- ------ 
+macc=2 weights=8 act=8 ram_io=0
+
+Generated files (7)
+------------------------------------------------------------------------ 
+C:\Users\abl\.stm32cubemx\eis_network_output\eis_network_data_params.h   
+C:\Users\abl\.stm32cubemx\eis_network_output\eis_network_data_params.c   
+C:\Users\abl\.stm32cubemx\eis_network_output\eis_network_data.h          
+C:\Users\abl\.stm32cubemx\eis_network_output\eis_network_data.c          
+C:\Users\abl\.stm32cubemx\eis_network_output\eis_network_config.h        
+C:\Users\abl\.stm32cubemx\eis_network_output\eis_network.h               
+C:\Users\abl\.stm32cubemx\eis_network_output\eis_network.c               

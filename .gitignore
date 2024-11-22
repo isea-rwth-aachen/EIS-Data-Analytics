@@ -5,30 +5,19 @@ results_all_f.csv
 !.gitkeep
 /mlruns/**
 !.gitkeep
+/microcontroller_eis_network/onnx_export/**
+!.gitkeep
+!/microcontroller_eis_network/onnx_export/example_data_SISO_Linear_Z_abs_100hz_Temperature_940757438541927485_33edb75dde754d34aa05820499c475de.onnx
+/figures/**
+!.gitkeep
 modules/__pycache__
 trash/
 
-figures/*
 
 /data/**
 !/data/**/
 !.gitkeep
-!reference_data.parquet
-!reference_data_abs.json
-!reference_data_abs_temp_soc.json
-!reference_data_abs_phase_temp_soc.json
-!key_lookup_reference_data.parquet
 !example_data.parquet
-!example_data_abs.json
-!example_data_abs_0-01hz.json
-!example_data_abs_0-1hz.json
-!example_data_abs_1hz.json
-!example_data_abs_10hz.json
-!example_data_abs_100hz.json
-!example_data_abs_1khz.json
-!example_data_abs_phase.json
-!example_data_abs_voltage.json
-!example_data_abs_reduced_f.json
 !key_lookup_example_data.parquet
 
 # Following from https://github.com/jupyter/notebook/blob/main/.gitignore

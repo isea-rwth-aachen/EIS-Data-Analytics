@@ -14,7 +14,7 @@ authors:
     orcid: 'https://orcid.org/0000-0002-5622-3591'
 identifiers:
   - type: doi
-    value: 10.18154/RWTH-2024-03849
+    value: 10.18154/RWTH-2024-10988
 repository-code: 'https://git.rwth-aachen.de/isea/eis_data_analytics'
 license: MIT
-date-released: '2024-04-04'
+date-released: '2024-11-22'

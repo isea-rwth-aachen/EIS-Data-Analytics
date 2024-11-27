@@ -189,10 +189,10 @@ For DRT calculations, we use [pyDRTtools](https://github.com/ciuccislab/pyDRTtoo
 
 ## Related Publications / Citation
 
-Please cite our paper: https://doi.org/10.1016/j.jpowsour.2024.235049 .  
+Please cite our paper: https://doi.org/10.1016/j.jpowsour.2024.235049.  
 
-Archived versions of this git:  
-Release v0.0.9: https://doi.org/10.18154/RWTH-2024-03849  .
+Overview of all archived versions of this git:  
+https://publications.rwth-aachen.de/record/997067.
 
 If you use the EIS data from the example_input_data folder, please cite all relevant article.
 

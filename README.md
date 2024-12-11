@@ -4,7 +4,7 @@
     <img src="misc/CARL_ISEA_Logo.svg" align="right" alt="CARL Logo"  height="80"/>
 </a>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fgit.rwth-aachen.de%2Fisea%2Feis_data_analytics/main)
 
 *EIS Data Analytics* is a collection of code to analyze which fitting approach is suitable for your electrochemical impedance spectroscopy (EIS) data.  
 <a href="https://doi.org/10.1016/j.jpowsour.2024.235049" target="_blank">
@@ -14,6 +14,7 @@
 - [EIS Data Analytics](#eis-data-analytics)
 - [Overview](#overview)
 - [Getting Started](#getting-started)
+  - [Binder](#binder)
   - [Python](#python)
   - [Microcontroller (µC)](#microcontroller-µc)
 - [Example Usage](#example-usage)
@@ -51,6 +52,10 @@ The main purpose of this tool is to process and analyze large amounts of EIS mea
   - Multi-layer Perceptron (MLP) Regression [MISO, MIMO]
 
 # Getting Started
+## Binder
+Launch the project by clicking on the badge: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/git/https%3A%2F%2Fgit.rwth-aachen.de%2Fisea%2Feis_data_analytics/main) .  
+If you want to process a lot of data or run it on the microcontroller, please run it on your hardware.
+
 ## Python
 1.  Clone the project into your "path_to_this_project". Clone the submodules is important here:
 	```bash
@@ -103,7 +108,7 @@ See also the [README.md](microcontroller_eis_network/README.md) in the microcont
 
 # Example Usage
 The Jupyter Notebooks contain details and step-by-step explanations. However, the data must first be analyzed.
-1. [a_data_preparation.ipynb](a_data_preparation.ipynb) [Runtime Intel i7-1265U: 4.8 hours; Intel W-2295: 1 hour]
+1. [a_data_preparation.ipynb](a_data_preparation.ipynb) [Runtime with ```search_filters = ["LiFun_575166-01"]``` Intel i7-1265U: 4.8 hours; Intel W-2295: 1 hour]
 2. [b_data_inspection.ipynb](b_data_inspection.ipynb)
 
 Afterwards, Single-Input Single-Output (SISO), Multiple-Input Single-Output (MISO), and multiple-input multiple-output (MIMO) models can be fitted. 

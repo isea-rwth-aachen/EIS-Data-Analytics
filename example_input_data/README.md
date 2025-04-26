@@ -11,6 +11,7 @@ Further Information about the example input data.
 | **Name Pattern**                      | **Temperature (°C)**           | **SOC (%)**                                              | **SOH (%)**         | **Cite**               |
 | ------------------------------------- | ------------------------------ | -------------------------------------------------------- | ------------------- | ---------------------- |
 | LiFun\_575166-01\_* / "example\_data" | -15, -5, 5, 15, 25, 35, 45, 55 | 0, 1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 99, 100 | ~117 to ~112        | [1](README.md#sources) |
+| CATL\_LEP71H3L7\_01\_* | 5, 15, 25, 35, 45, 55 | 0, 1, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 99, 100 | 100       | [1](README.md#sources) |
 | Rashid\_Faraji-Niri\_*                | 15, 25, 35                     | 5, 20, 50, 70, 95                                        | 100, 95, 90, 85, 80 | [2](README.md#sources) |
 | Chan\_Dickinson\_Heins\_*             | 23                             | 20, 35, 50, 65, 80, 100                                  | 100 to ~17          | [3](README.md#sources) |
 | Mohtat\_*                             | 25                             | 0, 10, 20, 30, 40, 50, 60, 70, 80, 90                    | 100 to 0            | [4](README.md#sources) |
@@ -26,13 +27,13 @@ Not added yet.
 | Naumann\_*                            |                                |                                                          |                     | [9](README.md#sources) |
 
 
-#### Notes
-- LiFun\_575166-01\_* / "example\_data": Cells are still aging, and data will be updated.
-- SOH (State of Health) values for LiFun\_575166-01\_*/example\_data are nominal and have been covered so far from approximately 117% to 112%.
-
 ## LiFun_575166-01
 
 <img src="LiFun_575166-01_scatter.png" height="500"/>
+
+## CATL_LEP71H3L7_01
+
+<img src="CATL_LEP71H3L7_01_scatter.png" height="500"/>
 
 ## Rashid_Faraji-Niri
 
